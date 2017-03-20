@@ -12,6 +12,8 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import util.Random
 import java.lang.System.{currentTimeMillis => _time}
 
+import org.apache.log4j.LogManager
+
 /**
  * Hello world!
  *
@@ -22,11 +24,11 @@ object Benchmark {
     val sc = new SparkContext(conf)
 
     sc.hadoopConfiguration.set("mapred.output.compress", "false")
+    val log = LogManager.getRootLogger
+
 
     def profile[R](code: => R, t: Long = _time) = (code, _time - t)
 
-    // This is the output file for statistics
-    val statFile = new BufferedWriter(new FileWriter("Benchmark_write.stat"))
 
     val fs = FileSystem.get(new Configuration(true))
 
@@ -47,9 +49,8 @@ object Benchmark {
 
     fs.delete(new Path("foo"), true)
 
-    // Write statistics
-    statFile.write("\nMilliseconds for writing: " + timeW)
-    statFile.close()
+
+    log.info("\nMilliseconds for writing: " + timeW)
 
 
   }
