@@ -13,9 +13,11 @@ import org.apache.log4j.LogManager
 object Benchmark {
   def main(args: Array[String]){
 
-    var nFiles = args(0).toInt
+    val nFiles = args(0).toInt
     //files AND partitions
     val fSize = args(1).toInt //bytes
+
+    val repeat = args(2).toInt
 
     def profile[R](code: => R, t: Long = _time) = (code, _time - t)
 
@@ -44,25 +46,18 @@ object Benchmark {
     b.count()
 
     val (junk, timeW) = profile {
-      b.saveAsTextFile(outputTempPath)
-      fs.delete(new Path(outputTempPath), true)
-      b.saveAsTextFile(outputTempPath)
-      fs.delete(new Path(outputTempPath), true)
-      b.saveAsTextFile(outputTempPath)
-      fs.delete(new Path(outputTempPath), true)
-      b.saveAsTextFile(outputTempPath)
-      fs.delete(new Path(outputTempPath), true)
-      b.saveAsTextFile(outputTempPath)
+      for (i <- 1 to repeat) {
+        b.saveAsTextFile(outputTempPath)
+        fs.delete(new Path(outputTempPath), true)
+      }
     }
-
-    nFiles = nFiles * 5
 
     //make sure dir is empty
     fs.delete(new Path(outputTempPath), true)
 
-    log.info("\nBenchmark: Total volume         : " + (nFiles.toLong * fSize) + " Bytes")
+    log.info("\nBenchmark: Total volume         : " + (repeat * nFiles.toLong * fSize) + " Bytes")
     log.info("\nBenchmark: Total write time     : " + (timeW/1000.toFloat) + " s")
-    log.info("\nABenchmark: Aggregate Throughput : " + (nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
+    log.info("\nABenchmark: Aggregate Throughput : " + (repeat * nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
 
   }
 }
