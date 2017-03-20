@@ -6,10 +6,6 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import java.lang.System.{currentTimeMillis => _time}
 import org.apache.log4j.LogManager
 
-/**
- * Hello world!
- *
- */
 object Benchmark {
   def main(args: Array[String]){
 
