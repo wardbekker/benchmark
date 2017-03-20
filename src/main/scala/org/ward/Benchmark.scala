@@ -1,17 +1,9 @@
 package org.ward
 
-
-import java.io.{BufferedWriter, FileWriter}
-
-import org.apache.spark.SparkContext._
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.broadcast.Broadcast
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
-
-import util.Random
 import java.lang.System.{currentTimeMillis => _time}
-
 import org.apache.log4j.LogManager
 
 /**
@@ -20,38 +12,45 @@ import org.apache.log4j.LogManager
  */
 object Benchmark {
   def main(args: Array[String]){
-    val conf = new SparkConf().setAppName("Benchmark").set("spark.hadoop.dfs.replication", "1")
-    val sc = new SparkContext(conf)
 
-    sc.hadoopConfiguration.set("mapred.output.compress", "false")
-    val log = LogManager.getRootLogger
-
+    val nFiles = args(0).toInt //files AND partitions
+    val fSize = args(1).toInt //bytes
 
     def profile[R](code: => R, t: Long = _time) = (code, _time - t)
 
+    val outputTempPath = "_benchmark_out"
+
+    val sc = new SparkContext(
+        new SparkConf().setAppName("Benchmark").set("spark.hadoop.dfs.replication", "1")
+    )
+
+    sc.hadoopConfiguration.set("mapred.output.compress", "false")
+
+
+    val log = LogManager.getRootLogger
 
     val fs = FileSystem.get(new Configuration(true))
 
-    fs.delete(new Path("foo"), true)
+    //make sure dir is empty
+    fs.delete(new Path(outputTempPath), true)
 
-    val a = sc.parallelize(1 until 121, 120)
+    val a = sc.parallelize(1 until nFiles + 1, nFiles)
 
     val b = a.map( i => {
-      "0" * 50000000
+      "0" * fSize
     })
 
     // force calculation
     b.count()
 
     val (junk, timeW) = profile {
-      b.saveAsObjectFile("foo")
+      b.saveAsTextFile(outputTempPath)
     }
 
-    fs.delete(new Path("foo"), true)
-
-
+    //cleanup
+    fs.delete(new Path(outputTempPath), true)
+    
     log.info("\nMilliseconds for writing: " + timeW)
-
 
   }
 }
