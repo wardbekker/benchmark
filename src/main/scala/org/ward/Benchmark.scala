@@ -44,9 +44,9 @@ object Benchmark {
     b.count()
 
     val (junk, timeW) = profile {
-      b.saveAsTextFile(outputTempPath)
+      b.saveAsObjectFile(outputTempPath)
     }
-    
+
     log.info("\nMilliseconds for writing: " + timeW)
 
   }
