@@ -45,19 +45,25 @@ object Benchmark {
     // force calculation
     b.count()
 
-    val (junk, timeW) = profile {
-      for (i <- 1 to repeat) {
+    var totalTimeW = 0
+
+    for (i <- 1 to repeat) {
+      val (junk, timeW) = profile {
         b.saveAsTextFile(outputTempPath)
-        fs.delete(new Path(outputTempPath), true)
       }
+
+      totalTimeW += timeW
+
+      fs.delete(new Path(outputTempPath), true)
+
     }
 
     //make sure dir is empty
     fs.delete(new Path(outputTempPath), true)
 
     log.info("\nBenchmark: Total volume         : " + (repeat * nFiles.toLong * fSize) + " Bytes")
-    log.info("\nBenchmark: Total write time     : " + (timeW/1000.toFloat) + " s")
-    log.info("\nABenchmark: Aggregate Throughput : " + (repeat * nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
+    log.info("\nBenchmark: Total write time     : " + (totalTimeW/1000.toFloat) + " s")
+    log.info("\nABenchmark: Aggregate Throughput : " + (repeat * nFiles * fSize.toLong)/(totalTimeW/1000.toFloat) + " Bytes per second")
 
   }
 }
