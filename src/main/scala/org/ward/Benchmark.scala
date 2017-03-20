@@ -26,7 +26,6 @@ object Benchmark {
 
     sc.hadoopConfiguration.set("mapred.output.compress", "false")
 
-
     val log = LogManager.getRootLogger
 
     val fs = FileSystem.get(new Configuration(true))
@@ -46,6 +45,9 @@ object Benchmark {
     val (junk, timeW) = profile {
       b.saveAsTextFile(outputTempPath)
     }
+
+    //make sure dir is empty
+    fs.delete(new Path(outputTempPath), true)
 
     log.info("\nBenchmark: Total volume         : " + (nFiles.toLong * fSize) + " Bytes")
     log.info("\nBenchmark: Total write time     : " + (timeW/1000.toFloat) + " s")
