@@ -52,6 +52,8 @@ object Benchmark {
         b.saveAsTextFile(outputTempPath)
       }
 
+      log.info("\nABenchmark: Pass " + i " Aggregate Throughput : " + (nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
+
       totalTimeW += timeW
 
       fs.delete(new Path(outputTempPath), true)
@@ -61,9 +63,9 @@ object Benchmark {
     //make sure dir is empty
     fs.delete(new Path(outputTempPath), true)
 
-    log.info("\nBenchmark: Total volume         : " + (repeat * nFiles.toLong * fSize) + " Bytes")
+    log.info("\n\nBenchmark: Total volume         : " + (repeat * nFiles.toLong * fSize) + " Bytes")
     log.info("\nBenchmark: Total write time     : " + (totalTimeW/1000.toFloat) + " s")
-    log.info("\nABenchmark: Aggregate Throughput : " + (repeat * nFiles * fSize.toLong)/(totalTimeW/1000.toFloat) + " Bytes per second")
+    log.info("\nABenchmark: Aggregate Throughput : " + (repeat * nFiles * fSize.toLong)/(totalTimeW/1000.toFloat) + " Bytes per second\n")
 
   }
 }
