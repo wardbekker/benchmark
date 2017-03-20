@@ -45,7 +45,7 @@ object Benchmark {
     // force calculation
     b.count()
 
-    var totalTimeW = 0
+    var totalTimeW = 0L
 
     for (i <- 1 to repeat) {
       val (junk, timeW) = profile {
