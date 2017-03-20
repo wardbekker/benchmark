@@ -44,10 +44,12 @@ object Benchmark {
     b.count()
 
     val (junk, timeW) = profile {
-      b.saveAsObjectFile(outputTempPath)
+      b.saveAsTextFile(outputTempPath)
     }
 
-    log.info("\nMilliseconds for writing: " + timeW)
+    log.info("\nBenchmark: Total volume         : " + (nFiles.toLong * fSize) + " Bytes")
+    log.info("\nBenchmark: Total write time     : " + (timeW/1000.toFloat) + " s")
+    log.info("\nABenchmark: Aggregate Throughput : " + (nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
 
   }
 }
