@@ -52,7 +52,7 @@ object Benchmark {
         b.saveAsTextFile(outputTempPath)
       }
 
-      log.info("\nABenchmark: Pass " + i " Aggregate Throughput : " + (nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
+      log.info("\nABenchmark: Pass " + i + " Aggregate Throughput : " + (nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
 
       totalTimeW += timeW
 
