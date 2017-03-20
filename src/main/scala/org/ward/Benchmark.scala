@@ -33,8 +33,6 @@ object Benchmark {
 
     val fs = FileSystem.get(new Configuration(true))
 
-    //make sure dir is empty
-    fs.delete(new Path(outputTempPath), true)
 
     val a = sc.parallelize(1 until nFiles + 1, nFiles)
 
@@ -48,6 +46,9 @@ object Benchmark {
     var totalTimeW = 0L
 
     for (i <- 1 to repeat) {
+      //make sure dir is empty
+      fs.delete(new Path(outputTempPath), true)
+
       val (junk, timeW) = profile {
         b.saveAsTextFile(outputTempPath)
       }
@@ -55,14 +56,8 @@ object Benchmark {
       log.info("\nABenchmark: Pass " + i + " Aggregate Throughput : " + (nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
 
       totalTimeW += timeW
-
-      fs.delete(new Path(outputTempPath), true)
-
     }
-
-    //make sure dir is empty
-    fs.delete(new Path(outputTempPath), true)
-
+    
     log.info("\n\nBenchmark: Total volume         : " + (repeat * nFiles.toLong * fSize) + " Bytes")
     log.info("\nBenchmark: Total write time     : " + (totalTimeW/1000.toFloat) + " s")
     log.info("\nABenchmark: Aggregate Throughput : " + (repeat * nFiles * fSize.toLong)/(totalTimeW/1000.toFloat) + " Bytes per second\n")
