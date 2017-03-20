@@ -46,9 +46,6 @@ object Benchmark {
     val (junk, timeW) = profile {
       b.saveAsTextFile(outputTempPath)
     }
-
-    //cleanup
-    fs.delete(new Path(outputTempPath), true)
     
     log.info("\nMilliseconds for writing: " + timeW)
 
