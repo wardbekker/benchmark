@@ -13,7 +13,8 @@ import org.apache.log4j.LogManager
 object Benchmark {
   def main(args: Array[String]){
 
-    val nFiles = args(0).toInt //files AND partitions
+    var nFiles = args(0).toInt
+    //files AND partitions
     val fSize = args(1).toInt //bytes
 
     def profile[R](code: => R, t: Long = _time) = (code, _time - t)
@@ -44,7 +45,17 @@ object Benchmark {
 
     val (junk, timeW) = profile {
       b.saveAsTextFile(outputTempPath)
+      fs.delete(new Path(outputTempPath), true)
+      b.saveAsTextFile(outputTempPath)
+      fs.delete(new Path(outputTempPath), true)
+      b.saveAsTextFile(outputTempPath)
+      fs.delete(new Path(outputTempPath), true)
+      b.saveAsTextFile(outputTempPath)
+      fs.delete(new Path(outputTempPath), true)
+      b.saveAsTextFile(outputTempPath)
     }
+
+    nFiles = nFiles * 5
 
     //make sure dir is empty
     fs.delete(new Path(outputTempPath), true)
