@@ -1,6 +1,10 @@
 # Spark Benchmark Tool
 
-This tool is inspired by the DFSIO benchmark for Hadoop mapreduce. It will test the write throughput to HDFS using the Spark framework.
+This tool is inspired by the TestDFSIO benchmark tool for Hadoop mapreduce. This tool will use the Spark framework for writing to HDFS. 
+
+## Why ?!
+
+Short answer: Because you can. Longer answer: Spark benchmarking tools typically test compute performance, not HDFS write performance.
 
 ## Getting the Spark Jar
 
