@@ -10,8 +10,10 @@ It's build for Spark 1.6.2 / Scala 2.10.5
 
 ## Submit args explained:
 
-`<file/partitions>` : should ideally be equal to recommended spark.default.parallelism (cores x instances)
-`<bytes_per_file>` : should fit in memory: for example: 90000000 
+`<file/partitions>` : should ideally be equal to recommended spark.default.parallelism (cores x instances).
+
+`<bytes_per_file>` : should fit in memory: for example: 90000000.
+
 `<write_repetitions>` : no of re-writing of the test RDD to disk. benchmark will be averaged.
 
 ```sh
