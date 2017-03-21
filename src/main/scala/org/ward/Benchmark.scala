@@ -6,10 +6,7 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import java.lang.System.{currentTimeMillis => _time}
 import org.apache.log4j.LogManager
 
-/**
- * Hello world!
- *
- */
+
 object Benchmark {
   def main(args: Array[String]){
 
@@ -32,7 +29,6 @@ object Benchmark {
     val log = LogManager.getRootLogger
 
     val fs = FileSystem.get(new Configuration(true))
-
 
     val a = sc.parallelize(1 until nFiles + 1, nFiles)
 
@@ -57,10 +53,10 @@ object Benchmark {
 
       totalTimeW += timeW
     }
-    
+
     log.info("\n\nBenchmark: Total volume         : " + (repeat * nFiles.toLong * fSize) + " Bytes")
     log.info("\nBenchmark: Total write time     : " + (totalTimeW/1000.toFloat) + " s")
-    log.info("\nABenchmark: Aggregate Throughput : " + (repeat * nFiles * fSize.toLong)/(totalTimeW/1000.toFloat) + " Bytes per second\n")
+    log.info("\nABenchmark: Aggregate Throughput : " + ((repeat * nFiles * fSize.toLong)/125000000)/(totalTimeW/1000.toFloat) + " Gigabit per second\n")
 
   }
 }
