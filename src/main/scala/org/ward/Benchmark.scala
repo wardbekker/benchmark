@@ -36,7 +36,7 @@ object Benchmark {
 
     
     // write to HDFS
-    var totalTimeW = (1 to repeat).par.fold(0)({
+    var totalTimeW = (1 to repeat).par.map( i => {
 
         val (junk, timeW) = profile {
           b.saveAsTextFile(outputTempPath + i)
@@ -46,7 +46,7 @@ object Benchmark {
         log.info("\nBenchmark: Pass " + i + " Aggregate Throughput : " + (nFiles * fSize.toLong) / (timeW / 1000.toFloat) + " Bytes per second")
 
         timeW
-      })
+      }).sum
 
 
     //    for (i <- 1 to repeat) {
