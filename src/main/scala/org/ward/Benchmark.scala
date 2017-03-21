@@ -59,8 +59,8 @@ object Benchmark {
 //      totalTimeW += timeW
 //    }
 
-    log.info("\n\nBenchmark: Total volume         : " + (nFiles.toLong * fSize) + " Bytes")
+    log.info("\n\nBenchmark: Total volume         : " + (repeat * nFiles.toLong * fSize) + " Bytes")
     log.info("\nBenchmark: Total write time     : " + (totalTimeW/1000.toFloat) + " s")
-    log.info("\nBenchmark: Aggregate Throughput : " + ((nFiles * fSize.toLong)/125000000)/(totalTimeW/1000.toFloat) + " Gigabit per second\n")
+    log.info("\nBenchmark: Aggregate Throughput : " + ((repeat * nFiles * fSize.toLong)/125000000)/(totalTimeW/1000.toFloat) + " Gigabit per second\n")
   }
 }
