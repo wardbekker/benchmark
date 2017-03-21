@@ -38,15 +38,24 @@ object Benchmark {
     // write to HDFS
     var totalTimeW = 0L
 
-    for (i <- 1 to repeat) {
-      //make sure dir is empty
-      fs.delete(new Path(outputTempPath), true)
-      val (junk, timeW) = profile {
-        b.saveAsTextFile(outputTempPath)
-      }
-      log.info("\nABenchmark: Pass " + i + " Aggregate Throughput : " + (nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
-      totalTimeW += timeW
-    }
+      (1 to repeat).par.map(i => {
+        val (junk, timeW) = profile {
+          b.saveAsTextFile(outputTempPath)
+        }
+        log.info("\nABenchmark: Pass " + i + " Aggregate Throughput : " + (nFiles * fSize.toLong) / (timeW / 1000.toFloat) + " Bytes per second")
+        timeW
+      })
+
+
+    //    for (i <- 1 to repeat) {
+//      //make sure dir is empty
+//      fs.delete(new Path(outputTempPath), true)
+//      val (junk, timeW) = profile {
+//        b.saveAsTextFile(outputTempPath)
+//      }
+//      log.info("\nABenchmark: Pass " + i + " Aggregate Throughput : " + (nFiles * fSize.toLong)/(timeW/1000.toFloat) + " Bytes per second")
+//      totalTimeW += timeW
+//    }
 
     log.info("\n\nBenchmark: Total volume         : " + (repeat * nFiles.toLong * fSize) + " Bytes")
     log.info("\nBenchmark: Total write time     : " + (totalTimeW/1000.toFloat) + " s")
