@@ -39,10 +39,13 @@ object Benchmark {
     var totalTimeW = 0L
 
       (1 to repeat).par.map(i => {
+
         val (junk, timeW) = profile {
-          b.saveAsTextFile(outputTempPath)
+          b.saveAsTextFile(outputTempPath + i)
         }
-        log.info("\nABenchmark: Pass " + i + " Aggregate Throughput : " + (nFiles * fSize.toLong) / (timeW / 1000.toFloat) + " Bytes per second")
+        fs.delete(new Path(outputTempPath + i), true)
+
+        log.info("\nBenchmark: Pass " + i + " Aggregate Throughput : " + (nFiles * fSize.toLong) / (timeW / 1000.toFloat) + " Bytes per second")
         timeW
       })
 
@@ -59,6 +62,6 @@ object Benchmark {
 
     log.info("\n\nBenchmark: Total volume         : " + (repeat * nFiles.toLong * fSize) + " Bytes")
     log.info("\nBenchmark: Total write time     : " + (totalTimeW/1000.toFloat) + " s")
-    log.info("\nABenchmark: Aggregate Throughput : " + ((repeat * nFiles * fSize.toLong)/125000000)/(totalTimeW/1000.toFloat) + " Gigabit per second\n")
+    log.info("\nBenchmark: Aggregate Throughput : " + ((repeat * nFiles * fSize.toLong)/125000000)/(totalTimeW/1000.toFloat) + " Gigabit per second\n")
   }
 }
